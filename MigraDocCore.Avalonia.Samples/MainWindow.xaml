@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:preview="clr-namespace:MigraDocCore.Rendering.Avalonia;assembly=MigraDocCore.Rendering.Avalonia"
+        x:Class="MigraDocCore.Avalonia.Samples.MainWindow"
+        Title="Samples">
+
+  <TabControl Items="{Binding Documents}">
+    <TabControl.ItemTemplate>
+      <DataTemplate>
+        <TextBlock Text="{Binding Header}" />
+      </DataTemplate>
+    </TabControl.ItemTemplate>
+
+    <TabControl.ContentTemplate>
+      <DataTemplate>
+        <Grid RowDefinitions="*" ColumnDefinitions="Auto,*">
+          <StackPanel Orientation="Vertical" Margin="5" Spacing="5" Grid.Column="0">
+            <Button Command="{Binding OpenPdf}" Content="Open PDF" />
+            <Button Command="{Binding SavePdf}" Content="Save PDF" />
+            <Button Command="{Binding SaveDdl}" Content="Save DDL" />
+          </StackPanel>
+
+          <preview:DocumentPreview Document="{Binding Document}"
+                                   Grid.Column="1" />
+        </Grid>
+      </DataTemplate>
+    </TabControl.ContentTemplate>
+  </TabControl>
+</Window>

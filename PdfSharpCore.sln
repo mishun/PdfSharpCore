@@ -18,6 +18,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfSharpCore.Test", "PdfSharpCore.Test\PdfSharpCore.Test.csproj", "{A862C0CE-C095-459C-A32B-8FCDD15A93BF}"
 EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PdfSharpCore.Drawing.Avalonia", "PdfSharpCore.Drawing.Avalonia\PdfSharpCore.Drawing.Avalonia.fsproj", "{1EE3102B-9981-433E-9A37-61E9E960C417}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigraDocCore.Rendering.Avalonia", "MigraDocCore.Rendering.Avalonia\MigraDocCore.Rendering.Avalonia.csproj", "{8EB09FED-BD39-4638-9C86-778F4AF6B43D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigraDocCore.Avalonia.Samples", "MigraDocCore.Avalonia.Samples\MigraDocCore.Avalonia.Samples.csproj", "{624EE090-A61D-44C6-A4C3-FAAA52F259EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +50,18 @@ Global
 		{A862C0CE-C095-459C-A32B-8FCDD15A93BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A862C0CE-C095-459C-A32B-8FCDD15A93BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A862C0CE-C095-459C-A32B-8FCDD15A93BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EE3102B-9981-433E-9A37-61E9E960C417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EE3102B-9981-433E-9A37-61E9E960C417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EE3102B-9981-433E-9A37-61E9E960C417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EE3102B-9981-433E-9A37-61E9E960C417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EB09FED-BD39-4638-9C86-778F4AF6B43D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EB09FED-BD39-4638-9C86-778F4AF6B43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EB09FED-BD39-4638-9C86-778F4AF6B43D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EB09FED-BD39-4638-9C86-778F4AF6B43D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{624EE090-A61D-44C6-A4C3-FAAA52F259EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{624EE090-A61D-44C6-A4C3-FAAA52F259EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{624EE090-A61D-44C6-A4C3-FAAA52F259EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{624EE090-A61D-44C6-A4C3-FAAA52F259EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
