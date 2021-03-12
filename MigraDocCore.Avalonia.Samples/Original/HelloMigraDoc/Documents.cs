@@ -20,7 +20,7 @@ namespace HelloMigraDoc
 
             Paragraphs.DefineParagraphs(document);
             Tables.DefineTables(document);
-            //Charts.DefineCharts(document);
+            Charts.DefineCharts(document);
 
             return document;
         }

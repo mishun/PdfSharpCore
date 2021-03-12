@@ -33,8 +33,6 @@ let wrapFillMode (fr : XFillMode) =
 
 let wrapBrush (brush : XBrush) =
     match brush with
-    | null -> null
-
     | :? XSolidBrush as solid ->
         wrapColor solid.Color |> SolidColorBrush :> IBrush
 
@@ -57,45 +55,42 @@ let wrapBrush (brush : XBrush) =
 
 
 let wrapPen (pen : XPen) =
-    match pen with
-    | null -> null
-    | _ ->
-        let dashStyle =
-            match pen.DashStyle with
-            | XDashStyle.Solid -> null
-            | XDashStyle.Dash -> DashStyle.Dash
-            | XDashStyle.Dot -> DashStyle.Dot
-            | XDashStyle.DashDot -> DashStyle.DashDot
-            | XDashStyle.DashDotDot -> DashStyle.DashDotDot
-            | XDashStyle.Custom -> DashStyle (pen.DashPattern, pen.DashOffset) :> IDashStyle
-            | _ -> null
+    let dashStyle =
+        match pen.DashStyle with
+        | XDashStyle.Solid -> null
+        | XDashStyle.Dash -> DashStyle.Dash
+        | XDashStyle.Dot -> DashStyle.Dot
+        | XDashStyle.DashDot -> DashStyle.DashDot
+        | XDashStyle.DashDotDot -> DashStyle.DashDotDot
+        | XDashStyle.Custom -> DashStyle (pen.DashPattern, pen.DashOffset) :> IDashStyle
+        | _ -> null
 
-        let lineCap =
-            match pen.LineCap with
-            | XLineCap.Flat -> PenLineCap.Flat
-            | XLineCap.Round -> PenLineCap.Round
-            | XLineCap.Square -> PenLineCap.Square
-            | _ -> PenLineCap.Flat
+    let lineCap =
+        match pen.LineCap with
+        | XLineCap.Flat -> PenLineCap.Flat
+        | XLineCap.Round -> PenLineCap.Round
+        | XLineCap.Square -> PenLineCap.Square
+        | _ -> PenLineCap.Flat
 
-        let lineJoin =
-            match pen.LineJoin with
-            | XLineJoin.Miter -> PenLineJoin.Miter
-            | XLineJoin.Round -> PenLineJoin.Round
-            | XLineJoin.Bevel -> PenLineJoin.Bevel
-            | _ -> PenLineJoin.Bevel
+    let lineJoin =
+        match pen.LineJoin with
+        | XLineJoin.Miter -> PenLineJoin.Miter
+        | XLineJoin.Round -> PenLineJoin.Round
+        | XLineJoin.Bevel -> PenLineJoin.Bevel
+        | _ -> PenLineJoin.Bevel
 
-        let brush =
-            match pen.Brush with
-            | null -> wrapColor pen.Color |> SolidColorBrush :> IBrush
-            | brush -> wrapBrush brush
+    let brush =
+        match pen.Brush with
+        | null -> wrapColor pen.Color |> SolidColorBrush :> IBrush
+        | brush -> wrapBrush brush
 
-        Pen(brush = brush,
-            thickness = (96.0 / 72.0) * pen.Width,
-            dashStyle = dashStyle,
-            lineCap = lineCap,
-            lineJoin = lineJoin,
-            miterLimit = pen.MiterLimit
-            ).ToImmutable()
+    Pen(brush = brush,
+        thickness = (96.0 / 72.0) * pen.Width,
+        dashStyle = dashStyle,
+        lineCap = lineCap,
+        lineJoin = lineJoin,
+        miterLimit = pen.MiterLimit
+        ).ToImmutable() :> IPen
 
 
 let wrapImage (ximage : XImage) =
@@ -103,11 +98,12 @@ let wrapImage (ximage : XImage) =
     new Bitmap (stream)
 
 
-type WrappedFont = {
-    Size : float
-    Typeface : Typeface
-    Metrics : FontMetrics
-}
+[<AllowNullLiteral>]
+type WrappedFont (size : float, typeface : Typeface, metrics : FontMetrics) =
+    member __.Size = size
+    member __.Typeface = typeface
+    member __.Metrics = metrics
+
 
 let private fontTags = [|
     struct ("Black", ValueSome FontWeight.Black, ValueNone)
@@ -139,13 +135,10 @@ let wrapFont (xfont : XFont) =
             weight |> ValueOption.defaultValue (if xfont.Bold then FontWeight.Bold else FontWeight.Normal)
         )
 
-    {   Size = xfont.Size
-        Typeface = typeface
-        Metrics = FontMetrics (typeface, xfont.Size)
-    }
+    WrappedFont (xfont.Size, typeface, FontMetrics (typeface, xfont.Size))
 
 
-let wrapPolyLine (points : XPoint[], isClosed, fillMode) =
+let makePolyLine (points : XPoint[], isClosed, fillMode) =
     let g = StreamGeometry ()
     use ctx = g.Open ()
     match fillMode with
@@ -160,7 +153,16 @@ let wrapPolyLine (points : XPoint[], isClosed, fillMode) =
     g :> Geometry
 
 
-let wrapBeziers (points : XPoint[]) =
+let makeBezier (x1, y1, x2, y2, x3, y3, x4, y4) =
+    let g = StreamGeometry ()
+    use ctx = g.Open ()
+    ctx.BeginFigure (Point (x1, y1), false)
+    ctx.CubicBezierTo (Point (x2, y2), Point (x3, y3), Point (x4, y4))
+    ctx.EndFigure false
+    g :> Geometry
+
+
+let makeBeziers (points : XPoint[]) =
     let g = StreamGeometry ()
     use ctx = g.Open ()
     ctx.BeginFigure (wrapPoint points.[0], false)
@@ -177,7 +179,7 @@ let private makeCurveSegment (ctx : StreamGeometryContext, pt0 : XPoint, pt1 : X
         Point(pt2.X, pt2.Y)
     )
 
-let wrapCurve (points : XPoint[], tension3, isClosed, fillMode) =
+let makeCurve (points : XPoint[], tension3, isClosed, fillMode) =
     let g = StreamGeometry ()
     use ctx = g.Open ()
 
